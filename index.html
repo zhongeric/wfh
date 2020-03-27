@@ -1,0 +1,313 @@
+<html>
+  <head>
+    <title>#WFH</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://unpkg.com/infinite-scroll@3/dist/infinite-scroll.pkgd.min.js"></script>
+    <script src="https://polyfill.io/v2/polyfill.min.js?features=IntersectionObserver"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css" integrity="sha384-REHJTs1r2ErKBuJB0fCK99gCYsVjwxHrSU0N7I1zl9vZbggVJXRMsv/sLlOAGb4M" crossorigin="anonymous">
+  </head>
+  <style>
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-style: normal;
+    }
+
+    .post {
+      display: grid;
+      grid-template-rows: 50px auto 50px;
+      height: 300px;
+      width: 300px;
+      border-radius: 20px;
+      /* background-color: #f1f3f5; */
+      margin-bottom: 50px;
+      -webkit-box-shadow: 3px 3px 5px 3px #ccc;
+      box-shadow:         3px 3px 5px 3px #ccc;
+    }
+
+    .post-header {
+      background-color: #f8f9fa;
+      border-top-left-radius: 20px;
+      border-top-right-radius: 20px;
+    }
+
+    .post-footer {
+      display: grid;
+      grid-template-columns: 20px 20px 20px auto;
+      grid-column-gap: 10px;
+      padding-left: 10px;
+      padding-top: 10px;
+      background-color: #f8f9fa;
+      border-bottom-left-radius: 20px;
+      border-bottom-right-radius: 20px;
+    }
+
+    #container {
+      display: grid;
+      grid-template-columns: 150px auto 150px;
+      width: 100vw;
+      /* place-items: center; */
+    }
+
+    #main {
+      display: grid;
+      place-items: center;
+    }
+
+    .sidebar {
+      /* position: fixed; */
+    }
+
+    #left {
+      top: 25%;
+      position: fixed;
+      padding-left: 15px;
+    }
+
+    #right {
+      top: 25%;
+      position: fixed;
+    }
+
+    .post-list {
+      padding: 0px;
+      list-style-type:none;
+    }
+
+  </style>
+  <body>
+
+    <div id="container">
+      <div class="sidebar">
+        <div id="left">
+          <h4>Made by Eric Zhong</h4>
+          <a href="https://ericzhong.com">more by me</a>
+        </div>
+      </div>
+      <div id="main">
+        <h1>🌴 <a href="https://twitter.com/hashtag/wfh" style="color: #1c7ed6;">#WFH</a> and boost productivity 🖥️</h1>
+        <h2 style="width: 60%; text-align: center;">Make social media less addicting and naturally spend more time working</h2>
+        <h3>Keeps you from being distracted by Facebook, Twitter, Reddit...</h3>
+        <h4>Try me! Scroll down this feed</h4>
+        <ul class="post-list" style="">
+        </ul>
+      </div>
+      <div class="sidebar">
+        <div id="right">
+          <button>Get it now!</button>
+        </div>
+
+      </div>
+    </div>
+    <!-- <div id="feed">
+      <article class="post">...</article>
+      <article class="post">...</article>
+      <article class="post">...</article>
+      <article class="post">...</article>
+    </div>
+
+    <p class="pagination">
+      <a class="pagination__next" href="page2.html">Next page</a>
+    </p> -->
+
+  </body>
+  <script>
+  const _getCatImg = () => {
+  const randomNum = () => {
+    return Math.floor(Math.random() * 100000);
+  };
+  const url = "https://source.unsplash.com/collection/139386/200x200/?sig=";
+  return url + randomNum();
+  };
+
+  let topSentinelPreviousY = 0;
+  let topSentinelPreviousRatio = 0;
+  let bottomSentinelPreviousY = 0;
+  let bottomSentinelPreviousRatio = 0;
+
+  let listSize = 20;
+  let DBSize = 200;
+
+  const initDB = num => {
+  const db = [];
+  for (let i = 0; i < num; i++) {
+    db.push({
+      catCounter: i,
+      imgSrc: _getCatImg()
+    })
+  }
+  return db;
+  }
+
+  let DB = [];
+
+  let currentIndex = 0;
+
+  const initList = num => {
+  const container = document.querySelector(".post-list");
+
+  for (let i = 0; i < num; i++) {
+    const tile = document.createElement("LI");
+    tile.setAttribute("class", "post-tile");
+    tile.setAttribute("id", "post-tile-" + i);
+
+    const post = document.createElement("div");
+    post.className = "post";
+    const header = document.createElement("div");
+    header.className = "post-header";
+
+    // header.innerHTML = '<span class="post-info">' + '</span>'
+
+    post.style.background = `url(${DB[i].imgSrc}) no-repeat scroll center`;
+    post.style.backgroundSize = "100%";
+    post.appendChild(header);
+
+    const filler = document.createElement("div");
+    filler.style.height = "100%";
+    post.appendChild(filler);
+
+    const footer = document.createElement("div");
+    footer.innerHTML = '<i class="far fa-heart"></i><i class="far fa-comment"></i><i class="far fa-paper-plane"></i>'
+    footer.className = "post-footer";
+    post.appendChild(footer);
+
+    tile.appendChild(post);
+    container.appendChild(tile);
+  }
+
+  }
+
+  const getSlidingWindow = isScrollDown => {
+  const increment = listSize / 2;
+  let firstIndex;
+
+  if (isScrollDown) {
+    firstIndex = currentIndex + increment;
+  } else {
+    firstIndex = currentIndex - increment;
+  }
+
+  if (firstIndex < 0) {
+    firstIndex = 0;
+  }
+
+  return firstIndex;
+  }
+
+  const recycleDOM = firstIndex => {
+  for (let i = 0; i < listSize; i++) {
+    const tile = document.querySelector("#post-tile-" + i);
+    // tile.firstElementChild.innerText = DB[i + firstIndex].title;
+    tile.lastChild.setAttribute("src", DB[i + firstIndex].imgSrc);
+  }
+  }
+
+  const getNumFromStyle = numStr => Number(numStr.substring(0, numStr.length - 2));
+
+  const adjustPaddings = isScrollDown => {
+  const container = document.querySelector(".post-list");
+  const currentPaddingTop = getNumFromStyle(container.style.paddingTop);
+  const currentPaddingBottom = getNumFromStyle(container.style.paddingBottom);
+  const remPaddingsVal = 170 * (listSize / 2);
+  if (isScrollDown) {
+    container.style.paddingTop = currentPaddingTop + remPaddingsVal + "px";
+    container.style.paddingBottom = currentPaddingBottom === 0 ? "0px" : currentPaddingBottom - remPaddingsVal + "px";
+  } else {
+    container.style.paddingBottom = currentPaddingBottom + remPaddingsVal + "px";
+    container.style.paddingTop = currentPaddingTop === 0 ? "0px" : currentPaddingTop - remPaddingsVal + "px";
+
+  }
+  }
+
+  const topSentCallback = entry => {
+  if (currentIndex === 0) {
+    const container = document.querySelector(".post-list");
+    container.style.paddingTop = "0px";
+    container.style.paddingBottom = "0px";
+  }
+
+  const currentY = entry.boundingClientRect.top;
+  const currentRatio = entry.intersectionRatio;
+  const isIntersecting = entry.isIntersecting;
+
+  // conditional check for Scrolling up
+  if (
+    currentY > topSentinelPreviousY &&
+    isIntersecting &&
+    currentRatio >= topSentinelPreviousRatio &&
+    currentIndex !== 0
+  ) {
+    const firstIndex = getSlidingWindow(false);
+    adjustPaddings(false);
+    recycleDOM(firstIndex);
+    currentIndex = firstIndex;
+  }
+
+  topSentinelPreviousY = currentY;
+  topSentinelPreviousRatio = currentRatio;
+  }
+
+  const botSentCallback = entry => {
+  if (currentIndex === DBSize - listSize) {
+    return;
+  }
+  const currentY = entry.boundingClientRect.top;
+  const currentRatio = entry.intersectionRatio;
+  const isIntersecting = entry.isIntersecting;
+
+  // conditional check for Scrolling down
+  if (
+    currentY < bottomSentinelPreviousY &&
+    currentRatio > bottomSentinelPreviousRatio &&
+    isIntersecting
+  ) {
+    const firstIndex = getSlidingWindow(true);
+    adjustPaddings(true);
+    recycleDOM(firstIndex);
+    currentIndex = firstIndex;
+  }
+
+  bottomSentinelPreviousY = currentY;
+  bottomSentinelPreviousRatio = currentRatio;
+  }
+
+  const initIntersectionObserver = () => {
+  const options = {
+    /* root: document.querySelector(".post-list") */
+  }
+
+  const callback = entries => {
+    entries.forEach(entry => {
+      if (entry.target.id === 'post-tile-0') {
+        topSentCallback(entry);
+      } else if (entry.target.id === `post-tile-${listSize - 1}`) {
+        botSentCallback(entry);
+      }
+    });
+  }
+
+  var observer = new IntersectionObserver(callback, options);
+  observer.observe(document.querySelector("#post-tile-0"));
+  observer.observe(document.querySelector(`#post-tile-${listSize - 1}`));
+  }
+
+  const start = () => {
+    DBSize = 100;
+    listSize = 5;
+
+    DB = initDB(DBSize);
+    initList(listSize);
+    initIntersectionObserver();
+
+    input1.style.display = "none";
+    input2.style.display = "none";
+    // document.querySelector("#start-btn").style.display = "none";
+  }
+
+  start();
+  </script>
+
+  <script src="script.js"></script>
+</html>
