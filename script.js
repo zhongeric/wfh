@@ -137,7 +137,7 @@ function disableScroll() {
   // text.style.left = "50%";
   text.style.left = "50%";
   text.style.transform = "translateX(-50%)";
-  bottom_fade.style.zIndex = 99;
+  bottom_fade.style.zIndex = 0;
   bottom_fade.style.width = "100%";
   bottom_fade.style.height = "100%";
   bottom_fade.style.position = "fixed";

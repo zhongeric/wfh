@@ -7,12 +7,28 @@
     <script src="https://unpkg.com/infinite-scroll@3/dist/infinite-scroll.pkgd.min.js"></script>
     <script src="https://polyfill.io/v2/polyfill.min.js?features=IntersectionObserver"></script>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css" integrity="sha384-REHJTs1r2ErKBuJB0fCK99gCYsVjwxHrSU0N7I1zl9vZbggVJXRMsv/sLlOAGb4M" crossorigin="anonymous">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-162088548-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-162088548-1');
+    </script>
   </head>
   <style>
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      /* font-family: -apple-system, BlinkMacSystemFont, sans-serif; */
+      font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
       font-style: normal;
+    }
+
+    .light-shadow {
+        -webkit-box-shadow: 0 7px 14px 0 rgba(60,66,87,0.1), 0 3px 6px 0 rgba(0,0,0,0.07);
+        -moz-box-shadow: 0 7px 14px 0 rgba(60,66,87,0.1),0 3px 6px 0 rgba(0,0,0,0.07);
+        box-shadow: 0 7px 14px 0 rgba(60,66,87,0.1), 0 3px 6px 0 rgba(0,0,0,0.07);
     }
 
     .post {
@@ -31,6 +47,10 @@
       background-color: #f8f9fa;
       border-top-left-radius: 20px;
       border-top-right-radius: 20px;
+    }
+
+    .front {
+      z-index: 100;
     }
 
     .post-footer {
@@ -58,6 +78,7 @@
 
     .sidebar {
       /* position: fixed; */
+      display: grid;
     }
 
     #left {
@@ -69,11 +90,36 @@
     #right {
       top: 25%;
       position: fixed;
+      /* align-self: center; */
+      /* padding-right: 15px; */
     }
 
     .post-list {
       padding: 0px;
       list-style-type:none;
+    }
+
+    #install-btn {
+      border: none;
+      outline: none;
+      background-color: #fcc419;
+      border-radius: 10px;
+      padding: 10px;
+      cursor: pointer;
+    }
+
+    #install-btn:hover {
+      background-color: #ffe066;
+    }
+
+    #install-now {
+      color: #212529;
+      font-size: 26px;
+      text-decoration: none;
+    }
+
+    #install-now:hover {
+      /* background-color: rgb(252,196,25, 0.8); */
     }
 
   </style>
@@ -82,21 +128,27 @@
     <div id="container">
       <div class="sidebar">
         <div id="left">
-          <h4>Made by Eric Zhong</h4>
-          <a href="https://ericzhong.com">more by me</a>
+          <!-- <h4>Made by Eric Zhong</h4> -->
+          <button id="install-btn" class="light-shadow front">
+            <a id="install-now" href="https://chrome.google.com/webstore/detail/bcdcdmdmlaccfaojopncpmbpojgfejie" target="_blank">Add to Chrome</a>
+          </button>
+          <!-- <a href="https://ericzhong.com">more by me</a> -->
         </div>
       </div>
       <div id="main">
         <h1>🌴 <a href="https://twitter.com/hashtag/wfh" style="color: #1c7ed6;">#WFH</a> and boost productivity 🖥️</h1>
         <h2 style="width: 60%; text-align: center;">Make social media less addicting and naturally spend more time working</h2>
-        <h3>Keeps you from being distracted by Facebook, Twitter, Reddit...</h3>
-        <h4>Try me! Scroll down this feed</h4>
+        <h3>This infinite scroll blocker keeps you from being distracted by Facebook, Twitter, Reddit...</h3>
+        <h4 style="font-weight: 500;">Try me! Scroll down this feed</h4>
         <ul class="post-list" style="">
         </ul>
       </div>
       <div class="sidebar">
         <div id="right">
-          <button>Get it now!</button>
+          <h4>Made by Eric Zhong</h4>
+          <a href="https://ericzhong.com" class="front">more by me</a>
+
+            <!-- <a id="install-now" href="https://chrome.google.com/webstore/detail/bcdcdmdmlaccfaojopncpmbpojgfejie" target="_blank">Add to Chrome</a> -->
         </div>
 
       </div>
@@ -118,7 +170,7 @@
   const randomNum = () => {
     return Math.floor(Math.random() * 100000);
   };
-  const url = "https://source.unsplash.com/collection/139386/200x200/?sig=";
+  const url = "https://source.unsplash.com/collection/1131211/200x200/?sig=";
   return url + randomNum();
   };
 
