@@ -1,0 +1,48 @@
+<html>
+  <head>
+    <!-- Author: ericzhong.com -->
+    <meta charset="utf-8">
+  </head>
+  <style>
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-style: normal;
+    }
+
+    #main {
+      display: grid;
+      grid-template-columns: 1fr;
+      text-align: center;
+      height: 100px;
+    }
+
+    .toggle-btn {
+      width: 100px;
+      font-size: 30px;
+      outline: 0px;
+      border: 0px;
+      cursor: pointer;
+    }
+
+    .toggle-btn:hover {
+      border-bottom: 3px solid #51cf66;
+    }
+
+    .active {
+      border-bottom: 3px solid #51cf66;
+    }
+  </style>
+
+  <body>
+    <div id="main">
+      <span style="grid-column: 1/-1; font-weight: 600; font-size: 16px;">WFH</span>
+      <!-- <button id="start" classs="toggle-btn active" onclick="">🖥️</button> -->
+      <button id="toggle-btn" class="toggle-btn active">🖥️</button>
+      <span id="status">On</span>
+      <span style="font-size: 8px; margin-top: 10px;">&copy; ericzhong.com </span>
+    </div>
+    <script src="popup.js"></script>
+
+  </body>
+</html>
